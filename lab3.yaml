@@ -15,7 +15,7 @@ resources:
   mhq-server:
     type: "OS::Nova::Server"
     properties:
-    description: "Taskbot server with db"
+      # description: "Taskbot server with db"
       name: "mhq-instance-01"
       flavor: "m1.small"
       image: "d608627a-ef62-452d-8a74-1c307cbe276d" # ubuntu 22.04
