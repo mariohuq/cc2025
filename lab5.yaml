@@ -3,7 +3,7 @@
   connection: local
   vars:
     terraform_rc_path: .terraformrc
-    terraform_path: tf
+    terraform_path: ./tf
   tasks:
     - name: Prepare TF (set yandex mirror)
       copy:
