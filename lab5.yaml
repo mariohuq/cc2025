@@ -17,9 +17,13 @@
         state: present
       register: trfrm
 
-    - name: Export server ip up
-      environment:
-        DEPLOYMENT_SERVER_IP: "{{ trfrm.outputs.servers.value.serverip }}"
+    - name: Export server IP up
+      lineinfile:
+        path: ~/myenv
+        regexp: '^DEPLOYMENT_SERVER_IP='
+        line: "DEPLOYMENT_SERVER_IP={{ trfrm.outputs.servers.value.serverip }}"
+        mode: '0644'
+        create: yes
 
     - name: Add instance host (Ansible term)
       add_host:
