@@ -38,3 +38,5 @@ resource "openstack_compute_instance_v2" "mhq_server" {
     name = var.network_name
   }
 }
+
+# https://github.com/diodonfrost/terraform-openstack-examples

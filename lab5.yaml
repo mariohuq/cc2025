@@ -1,24 +1,29 @@
-# service_path
-# sql_path
-# jar_path
+---
 
-- name: run on local
+- name: Create production server
   hosts: localhost
   connection: local
+  vars:
+    terraform_rc_path: .terraformrc
+    terraform_path: tf
   tasks:
-    # https://github.com/diodonfrost/terraform-openstack-examples
+    - name: Prepare TF (set yandex mirror)
+      copy:
+        src: "{{ terraform_rc_path }}"
+        dest: ~/.terraformrc
+
     - name: Run terraform
       terraform:
-        project_path: "./tf"
+        project_path: "{{ terraform_path }}"
         force_init: yes
         state: present
-        # register: trfrm #Unsupported
+      register: trfrm
 
-    - name: Add instance host
+    - name: Add instance host (Ansible term)
       add_host:
         name: mhq-server
         groups: nodes
-        ansible_host: "{{ trfrm.outputs.servers.value.mhq_server }}"
+        ansible_host: "{{ trfrm.outputs.servers.value.serverip }}"
         ansible_ssh_private_key_file: ~/.ssh/id_rsa
         ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 
@@ -32,9 +37,11 @@
         host: "{{ trfrm.outputs.servers.value.serverip }}"
         port: 22
 
-- name: Start database server
+- name: Start production database 
   hosts: mhq-server
   become: yes
+  vars:
+    sql_path: create.sql
   tasks:
     - name: Update apt package cache
       apt:
@@ -57,15 +64,14 @@
         name: postgres
         password: 424242
 
+    - name: Create database
+      postgresql_db:
+        name: tasks
+
     - name: Copy sql import script
       copy:
         src: "{{ sql_path  }}"
         dest: /home/ubuntu/create.sql
-
-
-    - name: Create database
-      postgresql_db:
-        name: tasks
 
     - name: Create tables
       postgresql_script:
@@ -73,8 +79,11 @@
         state: import
         target: /home/ubuntu/create.sql
 
-- name: Deploy app
+- name: Prepare production for deploy
   hosts: mhq-server
+  vars:
+    service_path: botserver.service
+    terraform_path: tf
   tasks:
     - name: Install JDK
       apt:
@@ -83,11 +92,6 @@
         state: present
       become: yes
 
-    - name: Copy artifacts
-      copy:
-        src: "{{ jar_path }}"
-        dest: /home/ubuntu/bot.jar
-      
     - name: Create bot app service
       copy:
         src: "{{ service_path }}"
@@ -95,16 +99,16 @@
         mode: '0777'
       become: yes
   
-    - name: Start bot app service
+    - name: Reload services
       systemd:
         daemon_reload: true
         name: botserver
-        state: restarted
+        state: stopped
       become: yes
    
     rescue:
-     - name: Clean up resources because of an error
+     - name: Clean up resources in case of error
        terraform:
-         project_path: "./tf"
+         project_path: "{{ terraform_path }}"
          state: absent
        delegate_to: localhost
