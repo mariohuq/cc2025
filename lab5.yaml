@@ -1,5 +1,3 @@
----
-
 - name: Create production server
   hosts: localhost
   connection: local
@@ -89,30 +87,31 @@
     service_path: botserver.service
     terraform_path: tf
   tasks:
-    - name: Install JDK
-      apt:
-        update_cache: yes
-        name: openjdk-21-jdk-headless
-        state: present
-      become: yes
+    - block:
+      - name: Install JDK
+        apt:
+          update_cache: yes
+          name: openjdk-21-jdk-headless
+          state: present
+        become: yes
 
-    - name: Create bot app service
-      copy:
-        src: "{{ service_path }}"
-        dest: /etc/systemd/system/botserver.service
-        mode: '0777'
-      become: yes
-  
-    - name: Reload services
-      systemd:
-        daemon_reload: true
-        name: botserver
-        state: stopped
-      become: yes
+      - name: Create bot app service
+        copy:
+          src: "{{ service_path }}"
+          dest: /etc/systemd/system/botserver.service
+          mode: '0777'
+        become: yes
+    
+      - name: Reload services
+        systemd:
+          daemon_reload: true
+          name: botserver
+          state: stopped
+        become: yes
    
-    rescue:
-     - name: Clean up resources in case of error
-       terraform:
-         project_path: "{{ terraform_path }}"
-         state: absent
-       delegate_to: localhost
+      rescue:
+       - name: Clean up resources in case of error
+         terraform:
+           project_path: "{{ terraform_path }}"
+           state: absent
+         delegate_to: localhost
