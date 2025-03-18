@@ -1,12 +1,12 @@
 # Params file for variables
 
-variable "image.name" {
+variable "image_name" {
   type    = string
   default = "ununtu-22.04"
 }
 
 #### VM parameters
-variable "server.flavor" {
+variable "server_flavor" {
   type    = string
   default = "m1.small"
 }
@@ -20,6 +20,6 @@ variable "security_group" {
   default = "default"
 }
 
-variable "network.name" {
+variable "network_name" {
   default = "sutdents-net"
 }

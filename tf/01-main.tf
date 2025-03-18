@@ -28,12 +28,12 @@ resource "openstack_networking_secgroup_rule_v2" "sg_ssh_rule" {
 
 resource "openstack_compute_instance_v2" "mhq_server" {
   name = "mhq-server"
-  image_name = var.image.name
-  flavor_name = var.server.flavor
+  image_name = var.image_name
+  flavor_name = var.server_flavor
   key_pair = var.key_pair
   security_groups = [openstack_networking_secgroup_v2.sg.name]
 
   network {
-    name = var.network.name
+    name = var.network_name
   }
 }

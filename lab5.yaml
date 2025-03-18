@@ -29,7 +29,7 @@
   tasks:
     - name: Wait for a ssh port become available
       wait_for:
-        host: "{{ trfrm.outputs.servers.value.tg_server }}" #??? 
+        host: "{{ trfrm.outputs.servers.value.serverip }}"
         port: 22
 
 - name: Start database server
