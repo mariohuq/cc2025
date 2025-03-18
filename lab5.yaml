@@ -1,0 +1,133 @@
+- name: run on local
+  hosts: localhost
+  connection: local
+  tasks:
+    # https://github.com/diodonfrost/terraform-openstack-examples
+    - name: Run terraform
+      terraform:
+        project_path: "./tf"
+        force_init: yes
+        state: present
+        register: trfrm
+
+    - name: Add instance host
+      add_host:
+        name: my_bot_server
+        groups: nodes
+        ansible_host: "{{ trfrm.outputs.servers.value.tg_server }}"
+        ansible_ssh_private_key_file: ~/.ssh/id_rsa
+        ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+
+- name: Wait for instance creating
+  hosts: localhost
+  connection: local     
+  
+  tasks:
+    - name: Wait for a ssh port become available
+      wait_for:
+        host: "{{ trfrm.outputs.servers.value.tg_server }}"
+        port: 22
+
+- name: Start database server
+  hosts: my_bot_server
+  become: yes
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+
+    - name: Install postgresql server
+      apt:
+        name: mysql-server-8.0
+        state: present
+
+    - name: Install python3-pip
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install PyMySQL using pip
+      pip:
+        name: pymysql
+        state: present
+        executable: pip3
+
+    - name: Change server configuration
+      ansible.builtin.lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: "^bind-address"
+        line: "bind-address = 0.0.0.0"
+
+    - name: Start MySQL service
+      service:
+        name: mysql
+        state: restarted
+        enabled: yes
+
+    - name: Install net-tools
+      apt:
+        name: net-tools
+        state: present
+
+    - name: Add user
+      postgresql_user:
+        name: ""
+        password: ""
+        priv: "tmpdb.*:ALL"
+        host: "%"  # Разрешить подключение с любого хоста
+        state: present
+        login_unix_socket: /run/mysqld/mysqld.sock
+
+    - name: Copy sql import script
+      copy:
+        src: "{{ sql_path  }}"
+        dest: /home/ubuntu
+
+    - name: Import database dump
+      mysql_db:
+        name: tmpdb
+        state: import
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        target: /home/ubuntu/BD.sql
+
+
+
+
+
+
+- name: Deploy app
+  hosts: task_manager_server
+  tasks:
+    - block:   
+      - name: Update apt cache and install jdk18
+        apt:
+          update_cache: yes
+          name: openjdk-18-jdk-headless
+          state: present
+        become: yes
+
+      - name: Copy artifacts
+        copy:
+          src: "{{ jar_path }}"
+          dest: /home/ubuntu/target
+        
+      - name: Configure Java app service
+        copy: 
+          src: "{{ service_path }}"
+          dest: /etc/systemd/system
+          mode: '0777'
+        become: yes
+    
+      - name: Start Java app service
+        systemd:
+          daemon_reload: true
+          name: chebotarev_bot
+          state: restarted
+        become: yes
+     
+      rescue:
+       - name: Clean up resources because of an error
+         terraform:
+           project_path: "./tf"
+           state: absent 
+         delegate_to: 127.0.0.1
