@@ -19,6 +19,10 @@
         state: present
       register: trfrm
 
+    - name: Export server ip up
+      environment:
+        DEPLOYMENT_SERVER_IP: "{{ trfrm.outputs.servers.value.serverip }}"
+
     - name: Add instance host (Ansible term)
       add_host:
         name: mhq-server
