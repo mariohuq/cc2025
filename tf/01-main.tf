@@ -1,11 +1,12 @@
 terraform {
   required_version = ">= 0.14.0"
   required_providers {
-    yandex = {
-      source = "yandex-cloud/yandex"
+    openstack = {
+      source = "yandex-cloud/openstack"
     }
   }
 }
+
 
 # use environment variables
 provider "openstack" {
