@@ -66,12 +66,12 @@
         enabled: yes
 
     - name: Set user password
-      postgresql_user:
+      community.postgresql.postgresql_user:
         name: postgres
         password: 424242
 
     - name: Create database
-      postgresql_db:
+      community.postgresql.postgresql_db:
         name: tasks
 
     - name: Copy sql import script
@@ -80,7 +80,7 @@
         dest: /home/ubuntu/create.sql
 
     - name: Create tables
-      postgresql_script:
+      community.postgresql.postgresql_script:
         db: tasks
         state: import
         target: /home/ubuntu/create.sql
