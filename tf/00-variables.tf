@@ -23,3 +23,11 @@ variable "security_group" {
 variable "network_name" {
   default = "sutdents-net"
 }
+
+
+# export TF_VAR_user_name=
+variable "user_name" {
+}
+# export TF_VAR_password=
+variable "password" {
+}
