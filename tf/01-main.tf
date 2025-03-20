@@ -37,7 +37,7 @@ resource "openstack_networking_secgroup_rule_v2" "sg_ssh_rule" {
 }
 
 resource "openstack_compute_instance_v2" "mhq_server" {
-  name = "mhq-server"
+  name = "mhq-server-trfm"
   image_name = var.image_name
   flavor_name = var.server_flavor
   key_pair = var.key_pair
