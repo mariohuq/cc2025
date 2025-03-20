@@ -23,7 +23,7 @@ provider "openstack" {
 }
 
 resource "openstack_networking_secgroup_v2" "sg" {
-  name = "mhq-group"
+  name = "mhq-group-trfm"
 }
 
 resource "openstack_networking_secgroup_rule_v2" "sg_ssh_rule" {
