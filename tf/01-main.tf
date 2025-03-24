@@ -10,6 +10,7 @@ terraform {
 
 
 # use environment variables
+# https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs
 provider "openstack" {
   auth_url = "https://cloud.crplab.ru:5000"
   tenant_id = "a02aed7892fa45d0bc2bef3b8a08a6e9"
@@ -22,10 +23,12 @@ provider "openstack" {
   region = "RegionOne"
 }
 
+# https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs/resources/networking_secgroup_v2
 resource "openstack_networking_secgroup_v2" "sg" {
-  name = "mhq-group"
+  name = "mhq-group-trfm"
 }
 
+# https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs/resources/networking_secgroup_rule_v2
 resource "openstack_networking_secgroup_rule_v2" "sg_ssh_rule" {
   direction = "ingress"
   ethertype = "IPv4"
@@ -36,6 +39,7 @@ resource "openstack_networking_secgroup_rule_v2" "sg_ssh_rule" {
   security_group_id = openstack_networking_secgroup_v2.sg.id
 }
 
+# https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs/resources/compute_instance_v2
 resource "openstack_compute_instance_v2" "mhq_server" {
   name = "mhq-server-trfm"
   image_name = var.image_name
