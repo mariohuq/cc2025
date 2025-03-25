@@ -57,13 +57,18 @@
       apt:
         update_cache: yes
 
-    - name: Install postgresql server
+    - name: Install `postgresql` server
       apt:
         name: postgresql
         state: present
 
+    - name: Install python wrapper for PostgreSQL
+      apt:
+        name: python3-psycopg2
+        state: present
 
-    - name: Start postgresql service
+
+    - name: Start `postgresql` service
       service:
         name: postgresql
         state: restarted
