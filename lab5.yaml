@@ -82,6 +82,7 @@
     - name: Create database
       community.postgresql.postgresql_db:
         name: tasks
+        login_password: 424242
 
     - name: Copy sql import script
       copy:
@@ -93,6 +94,7 @@
         db: tasks
         state: import
         target: /home/ubuntu/create.sql
+        login_password: 424242 
 
 - name: Prepare production for deploy
   hosts: mhq-server
