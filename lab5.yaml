@@ -96,14 +96,16 @@
     - name: Copy sql import script
       copy:
         src: "{{ sql_path  }}"
-        dest: /home/ubuntu/create.sql
+        dest: /tmp/create.sql
         mode: u=rw,g=r,o=r
+        owner: postgres
+        group: postgres
 
     - name: Create tables
       become_user: postgres
       community.postgresql.postgresql_script:
         db: tasks
-        path: /home/ubuntu/create.sql
+        path: /tmp/create.sql
         login_password: 424242 
 
 - name: Prepare production for deploy
