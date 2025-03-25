@@ -62,7 +62,7 @@
         name: postgresql
         state: present
 
-    - name: Install python wrapper for PostgreSQL
+    - name: Install python wrapper for Ansible's PostgreSQL plugin
       apt:
         name: python3-psycopg2
         state: present
@@ -74,12 +74,21 @@
         state: restarted
         enabled: yes
 
+    - name: Install setfacl tool for changing user in Ansible
+      apt:
+        name: acl
+        state: present
+
+
+    # https://docs.ansible.com/ansible/latest/collections/community/postgresql/postgresql_user_module.html
     - name: Set user password
+      become_user: postgres
       community.postgresql.postgresql_user:
         name: postgres
         password: 424242
 
     - name: Create database
+      become_user: postgres
       community.postgresql.postgresql_db:
         name: tasks
         login_password: 424242
@@ -90,10 +99,10 @@
         dest: /home/ubuntu/create.sql
 
     - name: Create tables
+      become_user: postgres
       community.postgresql.postgresql_script:
         db: tasks
-        state: import
-        target: /home/ubuntu/create.sql
+        path: /home/ubuntu/create.sql
         login_password: 424242 
 
 - name: Prepare production for deploy
