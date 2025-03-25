@@ -97,6 +97,7 @@
       copy:
         src: "{{ sql_path  }}"
         dest: /home/ubuntu/create.sql
+        mode: u=rw,g=r,o=r
 
     - name: Create tables
       become_user: postgres
