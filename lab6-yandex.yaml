@@ -60,7 +60,7 @@
 
     - name: Install `postgresql` server
       apt:
-        name: postgresql
+        name: postgresql-14
         state: present
 
     - name: Install python wrapper for Ansible's PostgreSQL plugin
