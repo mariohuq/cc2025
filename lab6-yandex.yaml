@@ -11,7 +11,7 @@
         dest: ~/.terraformrc
 
     - name: Get environment variables
-      shell: source yc_vars.sh
+      shell: source tf-yandex/yc_vars.sh
       args:
         executable: /bin/bash
 
