@@ -13,9 +13,6 @@ terraform {
 # export TF_VAR_token=
 variable "token" {
 }
-
-
-
 # export TF_VAR_cloud_id=
 variable "cloud_id" {
 }

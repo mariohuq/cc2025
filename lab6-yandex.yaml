@@ -10,11 +10,6 @@
         src: "{{ terraform_rc_path }}"
         dest: ~/.terraformrc
 
-    - name: Get environment variables
-      ansible.builtin.shell: source tf-yandex/yc_vars.sh
-      args:
-        executable: /bin/bash
-
     - name: Run terraform
       environment:
         TF_VAR_token: "{{ lookup('env', 'YC_TOKEN') }}"
