@@ -10,8 +10,26 @@ terraform {
   required_version = ">= 0.13"
 }
 
+# export TF_VAR_token=
+variable "token" {
+}
+
+
+
+# export TF_VAR_cloud_id=
+variable "cloud_id" {
+}
+# export TF_VAR_folder_id=
+variable "folder_id" {
+}
+
+
+
 provider "yandex" {
   zone = "ru-central1-a"
+  token = var.token
+  cloud_id =  var.cloud_id
+  folder_id =  var.folder_id
 }
 
 
