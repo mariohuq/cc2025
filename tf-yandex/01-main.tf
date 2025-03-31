@@ -31,10 +31,10 @@ data "external" "ya_auth" {
 }
 
 provider "yandex" {
-  zone = "ru-central1-a"
   token = data.external.ya_auth.result.token
   cloud_id =  data.external.ya_auth.result.cloud_id
   folder_id =  data.external.ya_auth.result.folder_id
+  zone = "ru-central1-a"
 }
 
 
