@@ -1,6 +1,5 @@
 #/usr/bin/env bash
 
-# 
 YC_TOKEN=$($HOME/yandex-cloud/bin/yc iam create-token)
 YC_CLOUD_ID=$($HOME/yandex-cloud/bin/yc config get cloud-id)
 YC_FOLDER_ID=$($HOME/yandex-cloud/bin/yc config get folder-id)

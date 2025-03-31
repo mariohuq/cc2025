@@ -10,16 +10,6 @@ terraform {
   required_version = ">= 0.13"
 }
 
-# # export TF_VAR_token=
-# variable "token" {
-# }
-# # export TF_VAR_cloud_id=
-# variable "cloud_id" {
-# }
-# # export TF_VAR_folder_id=
-# variable "folder_id" {
-# }
-
 data "external" "ya_auth" {
   program = [
     "bash", "yc_vars.sh",
@@ -47,7 +37,7 @@ resource "yandex_compute_disk" "boot-disk-1" {
 }
 
 resource "yandex_compute_instance" "vm-1" {
-  name = "terraform1"
+  name = "kondraev-terraform"
 
   resources {
     cores  = 2 # 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32 allowed
