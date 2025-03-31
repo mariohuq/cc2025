@@ -10,23 +10,31 @@ terraform {
   required_version = ">= 0.13"
 }
 
-# export TF_VAR_token=
-variable "token" {
-}
-# export TF_VAR_cloud_id=
-variable "cloud_id" {
-}
-# export TF_VAR_folder_id=
-variable "folder_id" {
-}
+# # export TF_VAR_token=
+# variable "token" {
+# }
+# # export TF_VAR_cloud_id=
+# variable "cloud_id" {
+# }
+# # export TF_VAR_folder_id=
+# variable "folder_id" {
+# }
 
-
+data "external" "ya_auth" {
+  program = [
+    "bash", "yc_vars.sh",
+  ]
+  query = {
+    # You can pass something to STDIN of your program here, 
+    # but as per current version, the input will be given as JSON (map of string)
+  }
+}
 
 provider "yandex" {
   zone = "ru-central1-a"
-  token = var.token
-  cloud_id =  var.cloud_id
-  folder_id =  var.folder_id
+  token = data.external.ya_auth.result.token
+  cloud_id =  data.external.ya_auth.result.cloud_id
+  folder_id =  data.external.ya_auth.result.folder_id
 }
 
 

@@ -11,10 +11,10 @@
         dest: ~/.terraformrc
 
     - name: Run terraform
-      environment:
-        TF_VAR_token: "{{ lookup('env', 'YC_TOKEN') }}"
-        TF_VAR_cloud_id: "{{ lookup('env', 'YC_CLOUD_ID') }}"
-        TF_VAR_folder_id: "{{ lookup('env', 'YC_FOLDER_ID') }}"
+      # environment:
+      #   TF_VAR_token: "{{ lookup('env', 'YC_TOKEN') }}"
+      #   TF_VAR_cloud_id: "{{ lookup('env', 'YC_CLOUD_ID') }}"
+      #   TF_VAR_folder_id: "{{ lookup('env', 'YC_FOLDER_ID') }}"
       terraform:
         project_path: "{{ terraform_path }}"
         force_init: yes
