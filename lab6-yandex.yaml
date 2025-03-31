@@ -17,9 +17,9 @@
 
     - name: Run terraform
       environment:
-        YC_TOKEN: {{ $($HOME/yandex-cloud/bin/yc iam create-token) | expandvars }}
-        YC_CLOUD_ID: {{ $($HOME/yandex-cloud/bin/yc config get cloud-id) | expandvars }}
-        YC_FOLDER_ID: {{ $($HOME/yandex-cloud/bin/yc config get folder-id) | expandvars }}
+        YC_TOKEN: "{{ $($HOME/yandex-cloud/bin/yc iam create-token) | expandvars }}"
+        YC_CLOUD_ID: "{{ $($HOME/yandex-cloud/bin/yc config get cloud-id) | expandvars }}"
+        YC_FOLDER_ID: "{{ $($HOME/yandex-cloud/bin/yc config get folder-id) | expandvars }}"
       terraform:
         project_path: "{{ terraform_path }}"
         force_init: yes
