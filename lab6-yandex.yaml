@@ -11,15 +11,15 @@
         dest: ~/.terraformrc
 
     - name: Get environment variables
-      shell: source tf-yandex/yc_vars.sh
+      ansible.builtin.shell: source tf-yandex/yc_vars.sh
       args:
         executable: /bin/bash
 
     - name: Run terraform
       environment:
-        YC_TOKEN: "{{ $($HOME/yandex-cloud/bin/yc iam create-token) | expandvars }}"
-        YC_CLOUD_ID: "{{ $($HOME/yandex-cloud/bin/yc config get cloud-id) | expandvars }}"
-        YC_FOLDER_ID: "{{ $($HOME/yandex-cloud/bin/yc config get folder-id) | expandvars }}"
+        YC_TOKEN: "{{ lookup('env', 'YC_TOKEN') }}"
+        YC_CLOUD_ID: "{{ lookup('env', 'YC_CLOUD_ID') }}"
+        YC_FOLDER_ID: "{{ lookup('env', 'YC_FOLDER_ID') }}"
       terraform:
         project_path: "{{ terraform_path }}"
         force_init: yes
