@@ -108,6 +108,14 @@
         path: /tmp/create.sql
         login_password: 424242 
 
+    - name: Add db to hosts
+      become: yes
+      lineinfile:
+        path: /etc/hosts
+        regexp: ' db$'
+        line: "127.0.0.1 db"
+        create: yes
+
 - name: Prepare production for deploy
   hosts: mhq-server
   vars:
