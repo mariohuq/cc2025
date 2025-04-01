@@ -1,11 +1,11 @@
 -- create database tasks;
 
-create table owner
+create table if not exists owner
 ( owner_id integer generated always as identity primary key
 , telegram_id integer
 );
 
-create table task
+create table if not exists task
 ( task_id integer generated always as identity primary key
 , owner_id integer references owner (owner_id) on delete restrict on update restrict
 , summary text
@@ -15,7 +15,7 @@ create table task
 , spent_time interval
 );
 
-create table recurring_task
+create table if not exists recurring_task
 ( recurring_task_id integer generated always as identity primary key
 , owner_id integer references owner (owner_id) on delete restrict on update restrict
 , summary text
