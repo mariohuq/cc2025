@@ -1,0 +1,6 @@
+apiVersion: v2
+name: helmchart
+description: Task bot helm chart
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

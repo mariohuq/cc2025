@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot-deployment
+  labels:
+    app: taskbot
+spec:
+  replicas: 1 #use statefulset if want more than one
+  selector:
+    matchLabels:
+      app: taskbot
+  template:
+    metadata:
+      labels:
+        app: taskbot
+    spec:
+      containers:
+      - name: taskbot-app
+        image: cr.yandex/crpemj00lni3pf5vni3o/taskbot-app:latest
+        imagePullPolicy: "Always"
+        env:
+        - name: TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: bot-secret
+              key: token
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: db-username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: db-password
+        - name: DB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: db-url
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: db-name
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: bot-service
+# spec:
+#   selector:
+#     app: taskbot
+#   ports:
+#     - protocol: TCP
+#       port: 80

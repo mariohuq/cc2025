@@ -1,0 +1,13 @@
+namespace: kondraev-ns
+
+image:
+  bot:
+    repository: cr.yandex/crpemj00lni3pf5vni3o/taskbot-app
+    tag: latest
+  db:
+    repository: postgres
+    tag: latest
+
+db:
+  database: tasks
+  port: 5432
